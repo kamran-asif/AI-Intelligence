@@ -1,0 +1,26 @@
+# Node
+node_modules/
+dist/
+npm-debug.log*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.env
+
+# Java / Maven
+target/
+.mvn/
+*.class
+*.jar
+*.war
+*.ear
+mvnw
+mvnw.cmd
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.lnk
