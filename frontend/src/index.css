@@ -6,6 +6,7 @@
   --bg-surface-hover: rgba(22, 32, 59, 0.85);
   --border-color: rgba(255, 255, 255, 0.08);
   --border-color-hover: rgba(99, 102, 241, 0.4);
+  --bg-modal: #0e1422;
   
   --primary: #6366f1; /* Indigo */
   --primary-glow: rgba(99, 102, 241, 0.15);
@@ -318,3 +319,77 @@ body {
 .animate-fade {
   animation: fadeIn 0.3s ease-out forwards;
 }
+
+/* Light Theme Variables */
+body.light-theme {
+  --bg-base: #f0f2f5;
+  --bg-surface: rgba(255, 255, 255, 0.8);
+  --bg-surface-hover: rgba(243, 244, 246, 0.95);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-color-hover: rgba(99, 102, 241, 0.5);
+  --bg-modal: #ffffff;
+
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --primary-glow: rgba(99, 102, 241, 0.08);
+  --accent-glow: rgba(139, 92, 246, 0.08);
+  --shadow-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.06) 0px, transparent 40%),
+    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 40%);
+}
+
+body.light-theme .kpi-value,
+body.light-theme .action-title,
+body.light-theme .btn-primary,
+body.light-theme .btn-secondary:hover,
+body.light-theme .data-table td,
+body.light-theme h1,
+body.light-theme h3 {
+  color: #0f172a !important;
+}
+
+body.light-theme .btn-secondary {
+  background: rgba(0, 0, 0, 0.02);
+  color: #475569;
+}
+body.light-theme .btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+body.light-theme svg {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+body.light-theme svg line {
+  stroke: rgba(0, 0, 0, 0.06) !important;
+}
+body.light-theme .insight-box {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(99, 102, 241, 0.05));
+  border-color: rgba(139, 92, 246, 0.2);
+}
+body.light-theme .insight-box p {
+  color: #1e293b;
+}
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+}
+body.light-theme aside {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-right-color: rgba(0, 0, 0, 0.08) !important;
+}
+body.light-theme aside span {
+  background: linear-gradient(135deg, #0f172a, #475569) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+body.light-theme .alert-item {
+  background: rgba(255, 255, 255, 0.5);
+}
+body.light-theme .active-tab {
+  color: #6366f1 !important;
+  background: rgba(99, 102, 241, 0.08) !important;
+}
+

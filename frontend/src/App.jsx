@@ -5,8 +5,18 @@ const BACKEND_URL = 'http://localhost:8080';
 const AI_SERVICE_URL = 'http://localhost:8010';
 
 export default function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const [activeTab, setActiveTab] = useState('overview');
   const [inventory, setInventory] = useState([]);
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
   const [orders, setOrders] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [events, setEvents] = useState([]);
@@ -388,7 +398,12 @@ export default function App() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11px', color: 'var(--text-muted)', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
           <div>Spring Gateway: <span style={{ color: 'var(--status-delivered)' }}>● Online (8080)</span></div>
           <div>FastAPI Model: <span style={{ color: 'var(--status-delivered)' }}>● Online (8010)</span></div>
-          <button className="btn-secondary" style={{ marginTop: '10px', padding: '6px', fontSize: '12px' }} onClick={fetchData}>🔄 Sync Cluster</button>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '10px' }}>
+            <button className="btn-secondary" style={{ padding: '6px', fontSize: '12px' }} onClick={fetchData}>🔄 Sync</button>
+            <button className="btn-secondary" style={{ padding: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+              {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -442,7 +457,7 @@ export default function App() {
                 <div style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '14px', marginBottom: '16px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: 700 }}>⚠️ What to Care About Right Now</h3>
                   <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                    Expected Revenue Impact of Stockouts: <strong style={{ color: 'var(--status-error)' }}>{decisions.overview.expectedRevenueImpact}</strong>
+                    Expected Revenue Impact of Stockouts: <span style={{ fontWeight: 700, color: 'var(--status-error)' }}>{decisions.overview.expectedRevenueImpact}</span>
                   </p>
                 </div>
                 
@@ -489,7 +504,7 @@ export default function App() {
                   <div className="insight-header">
                     ✨ AI Predictive Insights
                   </div>
-                  <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#fff', fontWeight: 400 }}>
+                  <p style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)', fontWeight: 400 }}>
                     "{decisions.aiInsights}"
                   </p>
                   <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginTop: '10px', textAlign: 'right' }}>
@@ -601,7 +616,7 @@ export default function App() {
             {/* Add stock modal */}
             {showAddModal && (
               <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-                <div className="glass-panel" style={{ padding: '30px', width: '450px', background: '#0e1422' }}>
+                <div className="glass-panel" style={{ padding: '30px', width: '450px', background: 'var(--bg-modal)' }}>
                   <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Adjust / Add Stock</h3>
                   <form onSubmit={handleCreateItem} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -746,7 +761,7 @@ export default function App() {
             {/* Build order modal */}
             {showOrderModal && (
               <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-                <div className="glass-panel" style={{ padding: '30px', width: '500px', background: '#0e1422' }}>
+                <div className="glass-panel" style={{ padding: '30px', width: '500px', background: 'var(--bg-modal)' }}>
                   <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Place Outbound Dispatch</h3>
                   <form onSubmit={handlePlaceOrder} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -811,7 +826,7 @@ export default function App() {
             {/* Register worker modal */}
             {showWorkerModal && (
               <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-                <div className="glass-panel" style={{ padding: '30px', width: '400px', background: '#0e1422' }}>
+                <div className="glass-panel" style={{ padding: '30px', width: '400px', background: 'var(--bg-modal)' }}>
                   <h3 style={{ fontSize: '18px', marginBottom: '20px', fontWeight: 600 }}>Register Warehouse Staff</h3>
                   <form onSubmit={handleCreateWorker} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -870,7 +885,7 @@ export default function App() {
                       width: '100%', 
                       fontSize: '13px',
                       background: selectedForecastSku === f.sku ? 'var(--primary)' : 'rgba(255,255,255,0.02)',
-                      color: '#fff',
+                      color: selectedForecastSku === f.sku ? '#fff' : 'var(--text-primary)',
                       border: selectedForecastSku === f.sku ? '1px solid var(--primary)' : '1px solid var(--border-color)'
                     }}
                   >
@@ -891,21 +906,21 @@ export default function App() {
                       <div className="glass-panel" style={{ padding: '24px', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', borderTop: `4px solid ${selected.daysRemaining < 5 ? 'var(--status-error)' : 'var(--primary)'}` }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                           <span style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Current Stock</span>
-                          <span style={{ fontSize: '24px', fontWeight: 700, color: '#fff', marginTop: '4px' }}>{selected.currentStock}</span>
+                          <span style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '4px' }}>{selected.currentStock}</span>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                           <span style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Forecasted Demand</span>
-                          <span style={{ fontSize: '24px', fontWeight: 700, color: '#fff', marginTop: '4px' }}>{selected.reorderQuantity + selected.currentStock}</span>
+                          <span style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '4px' }}>{selected.reorderQuantity + selected.currentStock}</span>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                           <span style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Days Remaining</span>
-                          <span style={{ fontSize: '24px', fontWeight: 700, color: selected.daysRemaining < 5 ? 'var(--status-error)' : '#fff', marginTop: '4px' }}>
+                          <span style={{ fontSize: '24px', fontWeight: 700, color: selected.daysRemaining < 5 ? 'var(--status-error)' : 'var(--text-primary)', marginTop: '4px' }}>
                             {selected.daysRemaining} days
                           </span>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                           <span style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Risk Classification</span>
-                          <span style={{ fontSize: '18px', fontWeight: 600, color: '#fff', marginTop: '8px' }}>{selected.riskLevel}</span>
+                          <span style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '8px' }}>{selected.riskLevel}</span>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                           <span style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Expected Savings</span>
@@ -924,7 +939,7 @@ export default function App() {
                           </span>
                         </div>
                         <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-                          Our model predicts current inventory of **{selected.name}** will deplete in **{selected.daysRemaining} days** based on an average velocity of {selected.averageDailySales} units/day. Restocking **{selected.reorderQuantity} units** now will guarantee optimal safety stock cover, preventing contract SLA stockout penalties and yielding an estimated **${selected.expectedSavings.toLocaleString()}** in net operational savings.
+                          Our model predicts current inventory of <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{selected.name}</span> will deplete in <span style={{ fontWeight: 600, color: selected.daysRemaining < 5 ? 'var(--status-error)' : 'var(--text-primary)' }}>{selected.daysRemaining} days</span> based on an average velocity of {selected.averageDailySales} units/day. Restocking <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{selected.reorderQuantity} units</span> now will guarantee optimal safety stock cover, preventing contract SLA stockout penalties and yielding an estimated <span style={{ fontWeight: 600, color: 'var(--status-delivered)' }}>${selected.expectedSavings.toLocaleString()}</span> in net operational savings.
                         </p>
                         
                         {/* Forecasting SVG Graph (Secondary) */}
@@ -994,13 +1009,15 @@ export default function App() {
                     borderRadius: '16px',
                     lineHeight: '1.5',
                     fontSize: '14px',
-                    background: chat.sender === 'user' ? 'linear-gradient(135deg, var(--primary), var(--accent))' : 'rgba(255,255,255,0.03)',
+                    background: chat.sender === 'user' ? 'linear-gradient(135deg, var(--primary), var(--accent))' : 'var(--bg-surface)',
                     border: chat.sender === 'user' ? 'none' : '1px solid var(--border-color)',
-                    color: '#fff',
+                    color: chat.sender === 'user' ? '#fff' : 'var(--text-primary)',
                     whiteSpace: 'pre-line'
                   }}
                 >
-                  <strong>{chat.sender === 'user' ? 'Warehouse Operator' : 'Supervisor Agent'}</strong>
+                  <span style={{ fontWeight: 'bold', color: chat.sender === 'user' ? '#fff' : 'var(--text-primary)' }}>
+                    {chat.sender === 'user' ? 'Warehouse Operator' : 'Supervisor Agent'}
+                  </span>
                   <div style={{ marginTop: '4px' }}>{chat.text}</div>
                 </div>
               ))}
@@ -1076,6 +1093,14 @@ export default function App() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>LLM Supervisor System Prompts</label>
                 <textarea className="glass-input" rows="4" style={{ resize: 'none' }} defaultValue="You are the Warehouse Supervisor Copilot. Coordinate sub-agents (Inventory, Forecast, RAG) to formulate a helpful final response..." />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Visual Theme Mode</label>
+                <select className="glass-input" value={theme} onChange={e => setTheme(e.target.value)}>
+                  <option value="dark">🌙 Dark Mode (Glassmorphic Glow)</option>
+                  <option value="light">☀️ Light Mode (High Contrast Office)</option>
+                </select>
               </div>
 
               <button className="btn-primary" onClick={() => alert("Settings saved to localStorage.")} style={{ alignSelf: 'flex-start', marginTop: '10px' }}>
